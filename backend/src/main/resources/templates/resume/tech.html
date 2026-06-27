@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'Consolas', 'Courier New', monospace;
+            font-size: 10pt;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+        .resume-container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            display: flex;
+        }
+        .sidebar {
+            width: 65mm;
+            background: #1a252f;
+            color: #ecf0f1;
+            padding: 20mm 12mm;
+        }
+        .sidebar .name {
+            font-size: 18pt;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .sidebar .contact {
+            font-size: 8pt;
+            margin-bottom: 24px;
+            color: #bdc3c7;
+        }
+        .sidebar .contact p {
+            margin: 4px 0;
+            color: #bdc3c7;
+            font-size: 8pt;
+        }
+        .sidebar h3 {
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #1abc9c;
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #34495e;
+        }
+        .sidebar .skills-section {
+            margin-bottom: 24px;
+        }
+        .sidebar .skill-item {
+            margin-bottom: 8px;
+        }
+        .sidebar .skill-item .skill-name {
+            font-size: 9pt;
+            color: #ecf0f1;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .sidebar .skill-item .skill-bar {
+            height: 4px;
+            background: #34495e;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .sidebar .skill-item .skill-bar-fill {
+            height: 100%;
+            background: #1abc9c;
+            border-radius: 2px;
+            width: 80%;
+        }
+        .sidebar .edu-section { margin-bottom: 24px; }
+        .sidebar .edu-item {
+            margin-bottom: 10px;
+        }
+        .sidebar .edu-item strong {
+            font-size: 9pt;
+            color: #fff;
+            display: block;
+        }
+        .sidebar .edu-item span {
+            font-size: 8pt;
+            color: #95a5a6;
+            display: block;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20mm 16mm;
+        }
+        .main-content section {
+            margin-bottom: 20px;
+        }
+        .main-content section h2 {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #1a252f;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #1abc9c;
+        }
+        .work-item, .project-item {
+            margin-bottom: 14px;
+        }
+        .work-header, .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+        .work-header strong, .project-header strong {
+            font-size: 11pt;
+            color: #1a252f;
+        }
+        .work-header span, .project-header span {
+            font-size: 8pt;
+            color: #7f8c8d;
+        }
+        .main-content p { margin: 4px 0; font-size: 9pt; color: #555; }
+        .main-content ul {
+            margin: 4px 0 4px 16px;
+            font-size: 9pt;
+        }
+        .main-content ul li {
+            margin-bottom: 2px;
+            color: #555;
+        }
+        .main-content em { font-size: 8pt; color: #1abc9c; font-style: normal; }
+        .tech-tag {
+            display: inline-block;
+            background: #e8f8f5;
+            color: #1abc9c;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 8pt;
+            margin: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div th:if="${content == null}" style="text-align:center;padding:50px;color:#999;">
+        <p>简历内容为空，无法预览。请返回编辑页面完善简历信息。</p>
+    </div>
+    <div class="resume-container" th:if="${content != null}">
+        <!-- 左侧边栏 -->
+        <div class="sidebar">
+            <div th:if="${content.basicInfo}">
+                <div class="name" th:text="${content.basicInfo.name}">姓名</div>
+                <div class="contact">
+                    <p th:if="${content.basicInfo.phone}" th:text="${content.basicInfo.phone}"></p>
+                    <p th:if="${content.basicInfo.email}" th:text="${content.basicInfo.email}"></p>
+                    <p th:if="${content.basicInfo.location}" th:text="${content.basicInfo.location}"></p>
+                    <p th:if="${content.basicInfo.website}" th:text="${content.basicInfo.website}"></p>
+                </div>
+            </div>
+
+            <div class="skills-section" th:if="${content.skills != null and !content.skills.isEmpty()}">
+                <h3 th:text="${language == 'en' ? 'TECH STACK' : '技术栈'}">技术栈</h3>
+                <div th:each="skill : ${content.skills}" class="skill-item">
+                    <span class="skill-name" th:text="${skill}"></span>
+                    <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+                </div>
+            </div>
+
+            <div class="edu-section" th:if="${content.education != null and !content.education.isEmpty()}">
+                <h3 th:text="${language == 'en' ? 'EDUCATION' : '教育背景'}">教育背景</h3>
+                <div th:each="edu : ${content.education}" class="edu-item">
+                    <strong th:text="${edu.school}"></strong>
+                    <span th:text="|${edu.degree} · ${edu.major}|"></span>
+                    <span th:text="|${edu.startDate} - ${edu.endDate}|"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧主内容 -->
+        <div class="main-content">
+            <section class="summary" th:if="${content.summary}">
+                <h2 th:text="${language == 'en' ? 'About Me' : '个人总结'}">个人总结</h2>
+                <p th:text="${content.summary}"></p>
+            </section>
+
+            <section class="work" th:if="${content.workExperience != null and !content.workExperience.isEmpty()}">
+                <h2 th:text="${language == 'en' ? 'Experience' : '工作经历'}">工作经历</h2>
+                <div th:each="work : ${content.workExperience}" class="work-item">
+                    <div class="work-header">
+                        <strong th:text="${work.company}"></strong>
+                        <span th:text="${work.position}"></span>
+                        <span th:text="|${work.startDate} - ${work.endDate}|"></span>
+                    </div>
+                    <p th:if="${work.description}" th:text="${work.description}"></p>
+                    <ul th:if="${work.achievements != null and !work.achievements.isEmpty()}">
+                        <li th:each="a : ${work.achievements}" th:text="${a}"></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="projects" th:if="${content.projectExperience != null and !content.projectExperience.isEmpty()}">
+                <h2 th:text="${language == 'en' ? 'Projects' : '项目经验'}">项目经验</h2>
+                <div th:each="proj : ${content.projectExperience}" class="project-item">
+                    <div class="project-header">
+                        <strong th:text="${proj.name}"></strong>
+                        <span th:text="${proj.role}"></span>
+                        <span th:text="|${proj.startDate} - ${proj.endDate}|"></span>
+                    </div>
+                    <p th:if="${proj.description}" th:text="${proj.description}"></p>
+                    <p th:if="${proj.techStack}"><em th:text="|Tech: ${proj.techStack}|"></em></p>
+                    <ul th:if="${proj.highlights != null and !proj.highlights.isEmpty()}">
+                        <li th:each="h : ${proj.highlights}" th:text="${h}"></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
